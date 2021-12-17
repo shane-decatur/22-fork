@@ -8,22 +8,26 @@ int main() {
 
   while (1){
 
-    from_client = server_handshake( &to_client );
+    from_client = server_setup();
+    int f = fork();
 
-    printf("Client connected\n");
-    char *line = calloc(BUFFER_SIZE,1);
+    if (!f){
 
-    while (read(from_client,line,BUFFER_SIZE)){
+      to_client = server_connect(from_client);
+      printf("Client connected\n");
+      char *line = calloc(BUFFER_SIZE,1);
 
-      int i = 0;
-      for (i = 0; i < strlen(line); i++) {
-  				if (line[i] >= 97 && line[i] <= 122) line[i] -= 32;
-  		}
+      while (read(from_client,line,BUFFER_SIZE)){
 
-      write(to_client,line,BUFFER_SIZE);
+        int i = 0;
+        for (i = 0; i < strlen(line); i++) {
+    				if (line[i] >= 97 && line[i] <= 122) line[i] -= 32;
+    		}
+
+        write(to_client,line,BUFFER_SIZE);
+      }
+      printf("Client exited\n");
     }
-    printf("Client exited\n");
-
 
   }
 

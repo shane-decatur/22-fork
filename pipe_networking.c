@@ -13,7 +13,11 @@
   returns the file descriptor for the upstream pipe.
   =========================*/
 int server_setup() {
-  int from_client = 0;
+
+  mkfifo(WKP,0644);
+  int from_client = open(WKP, O_RDONLY);
+  remove(WKP);
+
   return from_client;
 }
 
@@ -26,7 +30,20 @@ int server_setup() {
   returns the file descriptor for the downstream pipe.
   =========================*/
 int server_connect(int from_client) {
-  int to_client  = 0;
+
+  char *buffer = calloc(BUFFER_SIZE,1);
+  read(from_client, buffer, BUFFER_SIZE);
+
+  int to_client = open(buffer, O_WRONLY);
+
+  srand(time(NULL));
+  int r = rand();
+  sprintf(buffer,"%d",r);
+
+  write(to_client,buffer,BUFFER_SIZE);
+  read(from_client,buffer,BUFFER_SIZE);
+
+
   return to_client;
 }
 
