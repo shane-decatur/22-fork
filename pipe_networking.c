@@ -31,18 +31,13 @@ int server_setup() {
   =========================*/
 int server_connect(int from_client) {
 
-  char *buffer = calloc(BUFFER_SIZE,1);
-  read(from_client, buffer, BUFFER_SIZE);
+  char *buffer = calloc(HANDSHAKE_BUFFER_SIZE,1);
+  read(from_client, buffer, HANDSHAKE_BUFFER_SIZE);
 
   int to_client = open(buffer, O_WRONLY);
 
-  srand(time(NULL));
-  int r = rand();
-  sprintf(buffer,"%d",r);
-
-  write(to_client,buffer,BUFFER_SIZE);
-  read(from_client,buffer,BUFFER_SIZE);
-
+  write(to_client,ACK,HANDSHAKE_BUFFER_SIZE);
+  read(from_client,ACK,HANDSHAKE_BUFFER_SIZE);
 
   return to_client;
 }

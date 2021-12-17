@@ -9,6 +9,7 @@ int main() {
   while (1){
 
     from_client = server_setup();
+
     int f = fork();
 
     if (!f){
@@ -16,6 +17,7 @@ int main() {
       to_client = server_connect(from_client);
       printf("Client connected\n");
       char *line = calloc(BUFFER_SIZE,1);
+      read(from_client,line,BUFFER_SIZE);
 
       while (read(from_client,line,BUFFER_SIZE)){
 
